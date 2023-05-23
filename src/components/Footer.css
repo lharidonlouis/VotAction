@@ -1,0 +1,16 @@
+footer {
+  background-color: #f8f9fa;
+}
+
+nav a {
+  color: #007bff;
+}
+
+nav a:hover {
+  color: #0056b3;
+}
+
+p {
+  font-size: 0.8rem;
+  color: #6c757d;
+}

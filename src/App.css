@@ -1,38 +1,112 @@
-.App {
-  text-align: center;
+@font-face {
+  font-family: TheBoldFont;
+  src: url(./font/theboldfont.ttf);
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,900;1,900&display=swap');
+
+@font-face {
+  font-family: 'TT Commons';
+  src: url('./font/TTCommonsThin.otf') format('opentype'),
+       url('./font/TTCommonsThinItalic.otf') format('opentype'),
+       url('./font/TTCommonsExtraLight.otf') format('opentype'),
+       url('./font/TTCommonsExtraLightItalic.otf') format('opentype'),
+       url('./font/TTCommonsLight.otf') format('opentype'),
+       url('./font/TTCommonsLightItalic.otf') format('opentype'),
+       url('./font/TTCommonsRegular.otf') format('opentype'),
+       url('./font/TTCommonsItalic.otf') format('opentype'),
+       url('./font/TTCommonsMedium.otf') format('opentype'),
+       url('./font/TTCommonsMediumItalic.otf') format('opentype'),
+       url('./font/TTCommonsDemiBold.otf') format('opentype'),
+       url('./font/TTCommonsDemiBoldItalic.otf') format('opentype'),
+       url('./font/TTCommonsBold.otf') format('opentype'),
+       url('./font/TTCommonsBoldItalic.otf') format('opentype'),
+       url('./font/TTCommonsExtraBold.otf') format('opentype'),
+       url('./font/TTCommonsExtraBoldItalic.otf') format('opentype'),
+       url('./font/TTCommonsBlack.otf') format('opentype'),
+       url('./font/TTCommonsBlackItalic.otf') format('opentype');
+  font-weight: 100 200 300 normal 500 600 700 800 900;
+  font-style: normal italic;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+
+
+.text-logo{
+  font-family: TheBoldFont;
+  font-size: 1.5rem;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.text-logo-big{
+  font-family: TheBoldFont;
+  font-size: 2.5rem;
 }
 
-.App-link {
-  color: #61dafb;
+.bbr {
+  background-image: linear-gradient(90deg, #000091 33.33%, rgba(143, 126, 53, 0.1) 33.33%, rgba(143, 126, 53, 0.1) 66.66%, #E1000F 66.66%);
+  height: 3px;
+  border-color: transparent;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+body {
+  font-family:  'TT Commons', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
 }
+
+h1{
+  font-weight: 900 !important;
+  text-transform: uppercase;}
+
+h2{
+  font-weight: 800 !important;
+}
+h3{
+  font-weight: 700 !important;
+}
+h4{
+  font-weight: 600 !important;
+}
+
+/* .stickers{
+  padding: 1%;
+  transform: rotate(-2deg);
+  width: fit-content;
+  margin-bottom: 20px;
+  margin: 0 auto;
+  word-break: break-word;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+.stickers-small{
+margin: 0 auto;
+margin-bottom: 20px;
+    max-width: 75%;
+}
+.stickers-red{
+  background-color: #E30B17;
+  color: white !important;
+}
+
+.stickers-black{
+  background-color: #000;
+  color: white !important;
+}
+
+.stickers-white{
+  background-color: white;
+  color: #E30B17 !important;
+  ;
+}
+ */
+
+
+
+
+
+ .table-taller-lines tbody tr {
+  height: 50px; /* Adjust the height value as needed */
+}
+
+
+
+
