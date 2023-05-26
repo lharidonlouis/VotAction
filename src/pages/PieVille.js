@@ -4,7 +4,7 @@ import { Chart } from 'chart.js/auto';
 
 import { GroupedNuances, colorNuances } from '../components/utils';
 
-function PieVille({ data, num_tour }) {
+function PieVille({ data, num_tour, height }) {
   // Combine all data for the specified tour
   const filteredData = data.filter(item => item.num_tour === num_tour);
 

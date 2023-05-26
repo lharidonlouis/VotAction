@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import Table from 'react-bootstrap/Table';
 import Form from 'react-bootstrap/Form';
+
+import { GlobalContext } from '../App';
+
 
 import { Nuances } from '../components/utils';
 import { list_elections } from '../components/utils';
@@ -12,7 +15,7 @@ function France() {
 
 const [data, setData] = useState([]);
 const [tables, setTables] = useState([]);
-const [elec, setElec] = useState('LG22_BVot_T1T2');
+const { elec, setElec } = useContext(GlobalContext);
 const [sum_T1, setSum_T1] = useState(1);
 const [sum_T2, setSum_T2] = useState(1);
 

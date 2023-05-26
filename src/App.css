@@ -29,6 +29,21 @@
   font-style: normal italic;
 }
 
+.bg-pastel-primary {
+  background-color: #c3d9e6; /* Pastel Blue */
+}
+
+.bg-pastel-info {
+  background-color: #d7e9f5; /* Pastel Light Blue */
+}
+
+.bg-pastel-success {
+  background-color: #c6e1c6; /* Pastel Green */
+}
+
+.bg-pastel-secondary {
+  background-color: #e6e6e6; /* Pastel Gray */
+}
 
 
 .text-logo{

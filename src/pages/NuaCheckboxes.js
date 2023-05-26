@@ -29,10 +29,10 @@ const graphUpdate = (mode, rawChartData, setChartData) => {
       labels: filteredChartData.map((item) => list_elections[item.name]),
       datasets: [
         {
-          label: 'Results',
+          label: 'Voix',
           data: data,
-          backgroundColor: 'rgba(75, 192, 192, 0.6)',
-          borderColor: 'rgba(255, 0, 0, 1)',
+          backgroundColor: 'rgba(75, 192, 192, 0.4)',
+          borderColor: 'rgba(75, 192, 192, 0.8)',
           tension: 0.1,
           fill: false,
         },
@@ -46,6 +46,12 @@ const graphUpdate = (mode, rawChartData, setChartData) => {
           max: yAxisMax,
         },
       },
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false, // Set this to false to hide the legend
+        },
+      },    
     };
 
     setChartData({ data: chartData, options: chartOptions });
@@ -54,7 +60,7 @@ const graphUpdate = (mode, rawChartData, setChartData) => {
   }
 };
 
-const NuaCheckboxes = ({ code_departement, code_commune, code_bvote }) => {
+const NuaCheckboxes = ({ code_departement, code_commune, code_bvote, desired_height }) => {
   const [selectedNuances, setSelectedNuances] = useState([]);
   const [rawChartData, setRawChartData] = useState([]);
   const [chartData, setChartData] = useState(null);
@@ -148,8 +154,8 @@ const NuaCheckboxes = ({ code_departement, code_commune, code_bvote }) => {
           {!initialLoad ? (
             <>
               {chartData ? (
-                <div className="mt-4" style={{ height: '450px' }}>
-                  <Line data={chartData.data} options={chartData.options} height={450} />
+                <div className="mt-4" style={{ height: `${desired_height}px`, width:"100%" }}>
+                  <Line data={chartData.data} options={chartData.options} />
                 </div>
               ) : (
                 <div className="col-12 mt-5">

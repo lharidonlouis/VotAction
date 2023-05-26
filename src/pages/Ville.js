@@ -1,9 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import Table from 'react-bootstrap/Table';
 import Form from 'react-bootstrap/Form';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { Collapse } from 'react-bootstrap';
+
+import { GlobalContext } from '../App';
+
+import { useNavigate } from 'react-router';
+
 
 import { Nuances } from '../components/utils';
 import { list_elections } from '../components/utils';
@@ -19,12 +24,13 @@ import ListBDV from './listBDV.js';
 
 function Ville() {
   const [data, setData] = useState([]);
-  const [code_departement, setCode_departement] = useState('95');
-  const [code_commune, setCode_commune] = useState('127');
+  const { elec, setElec } = useContext(GlobalContext);
+  const { code_departement, setCode_departement } = useContext(GlobalContext);
+  const { code_commune, setCode_commune } = useContext(GlobalContext);
+  const { code_bvote, setCode_bvote } = useContext(GlobalContext);
   const [villes, setVilles] = useState([]);
   const [depts, setDepartements] = useState([]);
   const [tables, setTables] = useState([]);
-  const [elec, setElec] = useState('LG22_BVot_T1T2');
   const [data_filtered, setData_filtered] = useState([]);
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -44,6 +50,7 @@ function Ville() {
 
   const [displayProgress, setDisplayProgress] = useState(true); // Toggle for displaying TourProgress or TourTable
 
+  const navigate = useNavigate();
 
   const handleToggleDisplay = () => {
     setDisplayProgress(!displayProgress);
@@ -69,6 +76,11 @@ function Ville() {
     setCode_commune(event.target.value);
   }
 
+
+    const handleBVoteClick = (code_bvote) => {
+      setCode_bvote(code_bvote);
+      navigate('/BVote');
+    };
 
 
   // useEffect(() => {
@@ -266,11 +278,11 @@ function Ville() {
             )}
             <div className='col-4'>
               <h3>Evolution</h3>
-              <NuaCheckboxes code_departement={code_departement} code_commune={code_commune} code_bvote={-1} />
+              <NuaCheckboxes code_departement={code_departement} code_commune={code_commune} code_bvote={-1} desired_height={450} />
               </div>
               <div className='col-12'>
               <h3>Evolution</h3>
-              <ChartNuances code_departement={code_departement} code_commune={code_commune} code_bvote={-1} />
+              <ChartNuances code_departement={code_departement} code_commune={code_commune} code_bvote={-1} desired_height={450} />
               </div>
             </div>
             </Collapse>
@@ -279,7 +291,8 @@ function Ville() {
       <div className='row'>
         <div className='col-12 mt-5 bg-light jumbotron p-5'>
           <h2>Les bureaux de vote</h2>
-          <ListBDV elections={elec} code_departement={code_departement} code_commune={code_commune} />
+          <hr className='my-4'/>
+          <ListBDV elections={elec} code_departement={code_departement} code_commune={code_commune} handleBVoteClick={handleBVoteClick} />
         </div>
       </div>
 
@@ -291,15 +304,21 @@ function Ville() {
               <button className='btn btn-secondary m-3' onClick={handleToggleDisplay}>
               {displayProgress ? "Affichage tableau" : "Affichage simplifié"}
               </button>
-              <hr className='my-4' />
+              <hr className='my-4' />              
               {displayProgress ? (
                 <>
+                <div className='row'>
+                  <div className='col-6'>
+                  {data_filtered.some(item => item.num_tour == 1) && (
+                  <VilleProgress data={data_filtered} numTour={1} inscrits={inscrits1} votants={votants1} total={total1}/>
+                )}
+                </div>
+                <div className='col-6'>
                 {data_filtered.some(item => item.num_tour == 2) && (
                   <VilleProgress data={data_filtered} numTour={2} inscrits={inscrits2} votants={votants2} total={total2}/>
                 )}
-                {data_filtered.some(item => item.num_tour == 1) && (
-                  <VilleProgress data={data_filtered} numTour={1} inscrits={inscrits1} votants={votants1} total={total1}/>
-                )}
+                </div>
+                </div>
               </>
               ) : (
                 <>
@@ -309,13 +328,13 @@ function Ville() {
                 {data_filtered.some(item => item.num_tour == 1) && (
                   <VilleTable data={data_filtered} numTour={1} inscrits={inscrits1} votants={votants1} total={total1}/>
                 )}
-                </>
-              )}
+                </>                           
+              )}       
               </>
-            ):(
-            <div className="alert alert-primary" role="alert">
-              <span className="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Chargement des résultats du bureau de vote 
-            </div>
+            ): (
+              <div className="alert alert-primary" role="alert">
+                <span className="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Chargement des résultats du bureau de vote 
+              </div>
             )}
             </div>
         </div>

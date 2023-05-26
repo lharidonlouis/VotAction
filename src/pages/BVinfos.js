@@ -1,16 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, memo } from 'react';
 import axios from 'axios';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 import icon from '../images/pin.png';
+import PieBDV from './PieBDV.js';
 
 
 import { Nuances, elections } from '../components/utils';
 import { list_elections } from '../components/utils';
 
 
-const BVinfos = ({ code_departement, code_commune, code_bvote }) => {
+const BVinfos = React.memo(({ code_departement, code_commune, code_bvote, data }) => {
 
     const mapContainerRef = useRef(null);
     var mapContainerKey = Math.random().toString();  
@@ -109,14 +110,17 @@ const BVinfos = ({ code_departement, code_commune, code_bvote }) => {
           
     const getAddressCoordinates = async (address) => {
       try {
-        const encodedAddress = encodeURIComponent(address);
-        const url = `https://nominatim.openstreetmap.org/search?q=${encodedAddress}&format=json&limit=1`;
-        const response = await fetch(url);
-        const data = await response.json();
+        // const encodedAddress = encodeURIComponent(address);
+        // const url = `https://nominatim.openstreetmap.org/search?q=${encodedAddress}&format=json&limit=1`;
+        // const response = await fetch(url);
+        const formattedAddress = address?.replace(/\s+/g, '+');
+        const response = await axios.get(`https://api-adresse.data.gouv.fr/search/?q=${formattedAddress}`);
+        const results = response.data.features;
+
+        // const data = await response.json();
     
-        if (data && data.length > 0) {
-          const { lat, lon } = data[0];
-          return { latitude: lat, longitude: lon };
+        if (results && results.length > 0) {
+          return { latitude: results[0]?.geometry.coordinates[1], longitude: results[0]?.geometry.coordinates[0] };
         }
     
         return null;
@@ -138,17 +142,19 @@ const BVinfos = ({ code_departement, code_commune, code_bvote }) => {
             </div>
           ) : (
             <>
-              <div className='col-md-6 col-sm-12 bg-light p-5'>
+              <div className='col-md-4 col-sm-12 bg-light p-5 rounded'>
                 <h2 className="text-capitalize">{infos?.libelle} - {(infos?.nom.toLowerCase())}</h2>
                 <hr className='bbr mt-0' />
-                <p>{address}</p>
-                <h3>Inscrits : {getInscrits()}</h3>
-                <div className='row'>
+                <p className='text-capitalize'>
+                  {address.toLowerCase}
+                </p>              
+                <div className='row mt-3'>
                   <div className='col-12'>
+                    <PieBDV data={data} num_tour={1} height={225} />
                   </div>
                 </div>
               </div>
-              <div className='col-md-6 col-sm-12'>
+              <div className='col-md-8 col-sm-12 p-0'>
                 <div key={mapContainerKey} ref={mapContainerRef} style={{ height: '400px', width: '100%' }} />
               </div>
             </>
@@ -156,6 +162,6 @@ const BVinfos = ({ code_departement, code_commune, code_bvote }) => {
         </div>
       );
       
-}
+});
 
 export default BVinfos;

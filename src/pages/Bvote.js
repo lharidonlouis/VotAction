@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, Suspense } from 'react';
+import React, { useState, useEffect, useContext, Suspense } from 'react';
 import axios from 'axios';
 import Table from 'react-bootstrap/Table';
 import Form from 'react-bootstrap/Form';
@@ -7,13 +7,16 @@ import { Chart } from 'chart.js';
 import { Collapse } from 'react-bootstrap';
 import Card from 'react-bootstrap/Card';
 import Nav from 'react-bootstrap/Nav';
+import { useNavigate } from 'react-router-dom';
+
+
+import { GlobalContext } from '../App';
 
 
 import { Nuances, elections } from '../components/utils';
 import { list_elections } from '../components/utils';
 import TourTable from './TourTable.js';
 import TourProgress from './TourProgress.js';
-
 
 const ChartInscritsAsync = React.lazy(() => import('./chartInscrits.js'));
 const NuaCheckboxes = React.lazy(() => import('./NuaCheckboxes.js'));
@@ -23,14 +26,16 @@ const BVinfos = React.lazy(() => import('./BVinfos.js'));
 
 
 function BVote() {
+  
   const [data, setData] = useState([]);
-  const [code_departement, setCode_departement] = useState('95');
-  const [code_commune, setCode_commune] = useState('127');
-  const [code_bvote, setCode_bvote] = useState('1');
+  const { elec, setElec } = useContext(GlobalContext);
+  const { code_departement, setCode_departement } = useContext(GlobalContext);
+  const { code_commune, setCode_commune } = useContext(GlobalContext);
+  const { code_bvote, setCode_bvote } = useContext(GlobalContext);
   const [villes, setVilles] = useState([]);
   const [depts, setDepartements] = useState([]);
   const [bvotes, setBvotes] = useState([]);
-  const [elec, setElec] = useState('LG22_BVot_T1T2');
+  const [canLoad, setCanLoad] = useState(false);
 
   const [l_bdv_noms, setL_bdv_noms] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -38,6 +43,11 @@ function BVote() {
   const [displayProgress, setDisplayProgress] = useState(true); // Toggle for displaying TourProgress or TourTable
 
 
+  
+  useEffect(() => {
+    console.log("after useEffect:", code_departement, code_commune, code_bvote);
+  }, []);
+    
   const handleCollapseToggle = () => {
     setIsCollapsed(!isCollapsed);
   };
@@ -63,65 +73,67 @@ function BVote() {
     setCode_bvote(event.target.value);
   }
 
-  useEffect(() => {
-    setCode_bvote('1');
-  }, [code_commune]);
+  const fetchDepts = async () => {
+    const result = await axios(`http://localhost:3005/api/dept`);
+    setDepartements(result.data);
+};
+  const fetchVilles = async () => {
+    const result = await axios(`http://localhost:3005/api/villes?elections=${elec}&dept="${code_departement}"`);
+    await setVilles(result.data);
+  };
+
+  const fetchBDV = async () => {
+    const result = await axios(`http://localhost:3005/api/bdv?code_departement="${code_departement}"&code_commune=${code_commune}&elections="${elec}"`);
+    setBvotes(result.data);
+  };
+  const get_names = async () => {
+    const result = await axios(`http://localhost:3005/api/bdv_noms?code_departement=${code_departement}&code_commune=${code_commune}`);
+    setL_bdv_noms(result.data); // Only set the first line of data
+    // console.log("noms : ", l_bdv_noms);
+    // console.log("l_bdv_noms : ", l_bdv_noms);
+  };
+
+  const fetchData = async () => {
+    setIsLoading(true);
+    try {
+      const result = await axios.get(`http://localhost:3005/api/data_bdv?elections=${elec}&code_departement=${code_departement}&code_commune=${code_commune}&code_bvote=${code_bvote}`);
+      setData(result.data);
+      setIsLoading(false);
+    } catch (error) {
+      console.log('Error fetching data:', error);
+      setIsLoading(false);
+    }
+  };
+
+
+  // useEffect(() => {
+  //   setCode_bvote('1');
+  // }, [code_commune]);
 
 
   useEffect(() => {
-    const fetchDepts = async () => {
-        const result = await axios(`http://localhost:3005/api/dept`);
-        await setDepartements(result.data);
-    };
-    fetchDepts();
+      fetchDepts();
     }, []);
 
   useEffect(() => {
-    const fetchVilles = async () => {
-        const result = await axios(`http://localhost:3005/api/villes?elections=${elec}&dept="${code_departement}"`);
-        await setVilles(result.data);
-    };
-    fetchVilles();
+      fetchVilles();
     }, [elec, code_departement]);
 
 
   useEffect(() => {
-    const get_names = async () => {
-      const result = await axios(`http://localhost:3005/api/bdv_noms?code_departement=${code_departement}&code_commune=${code_commune}`);
-      setL_bdv_noms(result.data); // Only set the first line of data
-      // console.log("noms : ", l_bdv_noms);
-      // console.log("l_bdv_noms : ", l_bdv_noms);
-    };
-    get_names();
+      get_names();
   }, [code_departement, code_commune]);
 
   useEffect(() => {
-    const fetchBDV = async () => {
-        const result = await axios(`http://localhost:3005/api/bdv?code_departement="${code_departement}"&code_commune=${code_commune}&elections="${elec}"`);
-        setBvotes(result.data);
-    };
-    fetchBDV();
+      fetchBDV();
   }, [elec, code_departement, code_commune]);
 
 
   useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        const result = await axios.get(`http://localhost:3005/api/data_bdv?elections=${elec}&code_departement=${code_departement}&code_commune=${code_commune}&code_bvote=${code_bvote}`);
-        setData(result.data);
-        setIsLoading(false);
-      } catch (error) {
-        console.log('Error fetching data:', error);
-        setIsLoading(false);
-      }
-    };
-
-    var t1 = performance.now();
-    fetchData();
-    var t2 = performance.now();
-    console.log("fetchData took " + (t2 - t1) + " milliseconds.");
-
+      var t1 = performance.now();
+      fetchData();
+      var t2 = performance.now();
+      console.log("fetchData took " + (t2 - t1) + " milliseconds.");
   }, [elec, code_departement, code_commune, code_bvote]);
 
   
@@ -198,7 +210,7 @@ function BVote() {
 
 
       <React.Suspense fallback={<div>Loading...</div>}>
-         <BVinfos code_departement={code_departement} code_commune={code_commune} code_bvote={code_bvote} />
+         <BVinfos code_departement={code_departement} code_commune={code_commune} code_bvote={code_bvote} data={data} />
       </React.Suspense>
 
       <div className='row'>
@@ -220,17 +232,17 @@ function BVote() {
             <div className='row'>
               <div className='col-4 mt-5 p-5 bg-light'>
                 <React.Suspense fallback={<div>Loading...</div>}>
-                  <ChartInscritsAsync code_departement={code_departement} code_commune={code_commune} code_bvote={code_bvote} />
+                  <ChartInscritsAsync code_departement={code_departement} code_commune={code_commune} code_bvote={code_bvote} desired_height={450} />
                 </React.Suspense>
               </div>
               <div className='col-4 mt-5 bg-light p-5'>
                 <React.Suspense fallback={<div>Loading...</div>}>
-                  <NuaCheckboxes code_departement={code_departement} code_commune={code_commune} code_bvote={code_bvote} mode={1} />
+                  <NuaCheckboxes code_departement={code_departement} code_commune={code_commune} code_bvote={code_bvote} mode={1} desired_height={450}/>
                 </React.Suspense>
               </div>
               <div className='col-4 mt-5 bg-light p-5'>
                 <React.Suspense fallback={<div>Loading...</div>}>
-                  <Test code_departement={code_departement} code_commune={code_commune} code_bvote={code_bvote} />
+                  <Test code_departement={code_departement} code_commune={code_commune} code_bvote={code_bvote} desired_height={450} />
                 </React.Suspense>
               </div>
             </div>

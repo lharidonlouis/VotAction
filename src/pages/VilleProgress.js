@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import { Nuances, GroupedNuances, GroupedGroupsNuances, colorNuances } from '../components/utils';
+import { FaUsers, FaBan, FaCheck, FaClipboard } from 'react-icons/fa';
 
-const VilleProgress = ({ data, numTour, total }) => {
+
+const VilleProgress = ({ data, numTour, total, inscrits, votants }) => {
   const filteredData = data.filter(item => item.num_tour == numTour);
 
   function rgbToRgba(rgb, alpha) {
@@ -44,7 +46,32 @@ const VilleProgress = ({ data, numTour, total }) => {
   return (
     <div className='bg-light p-5 my-5 rounded'>
       <h2 className='text-center'>Tour {numTour}</h2>
-      <p>Test</p>
+      <div className='row'>
+        <div className='col-6'>
+            <div className="px-1 py-2 bg-pastel-primary m-3 rounded">
+            <h3 className="text-primary text-center"><FaUsers /><br/> Inscrits</h3>
+            <p className="text-muted text-center"><strong>{inscrits}</strong></p>
+            </div>
+        </div>
+        <div className='col-6'>
+            <div className="px-1 py-2 bg-pastel-info m-3 rounded">
+            <h3 className="text-info text-center"><FaBan /><br/> Abstentions</h3>
+            <p className="text-muted text-center"><strong>{(((inscrits - votants) / inscrits) * 100).toFixed(2)}%</strong></p>
+            </div>
+        </div>
+        <div className='col-6'>
+            <div className="px-1 py-2 bg-pastel-success m-3 rounded">
+            <h3 className="text-success text-center"><FaCheck /><br/> Votants</h3>
+            <p className="text-muted text-center"><strong>{votants}</strong></p>
+            </div>
+        </div>
+        <div className='col-6'>
+            <div className="px-1 py-2 bg-pastel-secondary m-3 rounded">
+            <h3 className="text-secondary text-center"><FaClipboard /><br/> Blancs&Nuls</h3>
+            <p className="text-muted text-center"><strong>{votants - total}</strong></p>
+            </div>
+        </div>
+        </div>
       {filteredData
         .sort((b, a) => a.total - b.total)
         .map(item => (

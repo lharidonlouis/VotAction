@@ -5,7 +5,7 @@ import axios from 'axios';
 
 import { list_elections } from '../components/utils';
 
-const ChartInscrits = ({ code_departement, code_commune, code_bvote }) => {
+const ChartInscrits = ({ code_departement, code_commune, code_bvote, desired_height }) => {
   const chartRef = useRef(null);
   const [histo_inscrits, setHisto_inscrits] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -66,7 +66,12 @@ const fetchData = async () => {
           max: max,
         },
       },
-      maintainAspectRatio: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false, // Set this to false to hide the legend
+        },
+      },    
     }),
     [max]
   );
@@ -122,8 +127,8 @@ const fetchData = async () => {
               <span className="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Chargement du graphe du bureau de vote
             </div>
           ) : (
-            <div className="mt-4" style={{ height: '450px' }}>
-                <canvas ref={chartRef} height={"450px"} style={{height:"450px"}} />
+            <div className="mt-4" style={{ height: `${desired_height}px`, width:"100%" }}>
+                <canvas ref={chartRef} />
             </div>
           )}
         </>

@@ -340,7 +340,8 @@ app.get('/api/bdv_noms', (req, res) => {
 
   const id = code_departement.concat(code_commune);
 
-  const sql = `SELECT code_normalise_complet, nom FROM app_elections.2022_bvotes where commune_code = ${id}`;
+  // const sql = `SELECT code_normalise_complet, nom FROM app_elections.2022_bvotes where commune_code = ${id}`;
+  const sql = `SELECT * FROM app_elections.2022_bvotes where commune_code = ${id}`;
 
   console.log(sql);
   connection.query(sql, (err, results) => {
