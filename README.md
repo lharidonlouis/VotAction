@@ -16,6 +16,14 @@ Essayez VotAction dès maintenant et découvrez les résultats électoraux de vo
 
 Vous pouvez utiliser le fichier db.sql pour importer tous les résultats éléctoraux, bureau de vote par bureau de vote, depuis les élections européennes de 1999 (Hors Municipales).
 
+## Server
+
+To launch the api used to select queries from the database, please run.
+
+```
+node server/server.js 
+```
+
 ## Infromation
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
