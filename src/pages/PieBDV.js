@@ -72,7 +72,7 @@ const chartData = {
   };
 
   function rgbToRgba(rgb, alpha) {
-    return rgb.replace(')', `, ${alpha})`).replace('rgb', 'rgba');
+    return rgb?.replace(')', `, ${alpha})`).replace('rgb', 'rgba');
   }
 
   // Get the background color based on the codnua

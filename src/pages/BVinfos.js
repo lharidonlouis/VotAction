@@ -133,7 +133,7 @@ const BVinfos = React.memo(({ code_departement, code_commune, code_bvote, data }
 
 
     return (
-        <div className='row mt-5'>
+        <div className='row mt-5' style={{display:"flex"}}>
           {isLoading ? (
             <div className='col-12'>
               <div className="alert alert-primary" role="alert">
@@ -142,8 +142,8 @@ const BVinfos = React.memo(({ code_departement, code_commune, code_bvote, data }
             </div>
           ) : (
             <>
-              <div className='col-md-4 col-sm-12 bg-light p-5 rounded'>
-                <h2 className="text-capitalize">{infos?.libelle} - {(infos?.nom.toLowerCase())}</h2>
+              <div className='col-md-5 col-sm-12 bg-light p-5 rounded'>
+                <h2 className="mt-2 text-capitalize">{(infos?.nom.toLowerCase())}</h2>
                 <hr className='bbr mt-0' />
                 <p className='text-capitalize'>
                   {address.toLowerCase}
@@ -154,8 +154,8 @@ const BVinfos = React.memo(({ code_departement, code_commune, code_bvote, data }
                   </div>
                 </div>
               </div>
-              <div className='col-md-8 col-sm-12 p-0'>
-                <div key={mapContainerKey} ref={mapContainerRef} style={{ height: '400px', width: '100%' }} />
+              <div className='col-md-7 col-sm-12 p-0'>
+                <div key={mapContainerKey} ref={mapContainerRef} style={{ height: '100%', width: '100%' }} />
               </div>
             </>
           )}

@@ -6,7 +6,7 @@ const VilleTable = ({ data, numTour, inscrits, votants, total }) => {
   const filteredData = data.filter(item => item.num_tour == numTour);
 
   function rgbToRgba(rgb, alpha) {
-    return rgb.replace(')', `, ${alpha})`).replace('rgb', 'rgba');
+    return rgb?.replace(')', `, ${alpha})`).replace('rgb', 'rgba');
   }
 
   const getBackgroundColor = (codnua, alpha) => {

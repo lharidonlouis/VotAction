@@ -2,36 +2,56 @@ import React from 'react';
 import { Pie } from 'react-chartjs-2';
 import { Chart } from 'chart.js/auto';
 
-import { GroupedNuances, colorNuances } from '../components/utils';
+import { Nuances, GroupedNuances, colorNuances } from '../components/utils';
 
-function PieVille({ data, num_tour, height }) {
+function PieVille({ data, height }) {
   // Combine all data for the specified tour
-  const filteredData = data.filter(item => item.num_tour === num_tour);
+  console.log(data);
+  const filteredData1 = data.filter(item => item.num_tour == 1);
+  const filteredData2 = data.filter(item => item.num_tour == 2);
 
-// Sort the data by GroupedNuance
-filteredData.sort((a, b) => {
-  const nuanceA = Object.keys(GroupedNuances).find(key => GroupedNuances[key].includes(a.codnua)) || '';
-  const nuanceB = Object.keys(GroupedNuances).find(key => GroupedNuances[key].includes(b.codnua)) || '';
-  return nuanceA.localeCompare(nuanceB);
-});
-
-
-  const totalVoix = filteredData.reduce((sum, item) => sum + item.total, 0);
-
-  // Create a single dataset with all the data
-  const dataset = {
-    data: filteredData.map(item => item.total),
-    backgroundColor: filteredData.map(item => getBackgroundColor(item.codnua)),
+  // Create datasets for each series
+  const dataset1 = {
+    data: filteredData1.map(item => item.total),
+    backgroundColor: filteredData1.map(item => getBackgroundColor(item.codnua)),
   };
+  
+  const dataset2 = filteredData2 ? {
+    data: filteredData2.map(item => item.voix),
+    backgroundColor: filteredData2.map(item => getBackgroundColor(item.codnua)),
+  } : null;
 
-  // Create labels for the pie chart
-  const labels = filteredData.map(item => `${item.codnua} - ${Object.keys(GroupedNuances).find(key => GroupedNuances[key].includes(item.codnua))}`);
+  // Adjust the length of dataset2 to match dataset1
+if (dataset2 && dataset1.data.length !== dataset2.data.length) {
+    const adjustedData2 = [];
+    const adjustedBGCol = [];
 
-  // Construct the chart data
-  const chartData = {
+    for (let i = 0; i < dataset1.data.length; i++) {
+      const matchingItem = filteredData2.find(item => item.codnua === filteredData1[i].codnua);
+      if (matchingItem) {
+        adjustedData2.push(matchingItem.total);
+        adjustedBGCol.push(getBackgroundColor(matchingItem.codnua));
+      } else {
+        adjustedData2.push(0); // Or any other default value if no match is found
+        adjustedBGCol.push('rgba(0, 0, 0, 0)'); // Or any other default value if no match is found
+      }
+    }
+    dataset2.data = adjustedData2;
+    dataset2.backgroundColor = adjustedBGCol;
+  }
+  const datasets = dataset2 ? [dataset1, dataset2] : [dataset1];
+  console.log(datasets);
+
+// Create labels for the pie chart
+const labels = filteredData1.map(item => `${Nuances[item.codnua]} - ${Object.keys(GroupedNuances).find(key => GroupedNuances[key].includes(item.codnua))}`);
+
+console.log(labels);
+
+// Construct the chart data
+const chartData = {
     labels: labels,
-    datasets: [dataset],
-  };
+    datasets: datasets,
+};
 
   const chartOptions = {
     responsive: true,
@@ -48,12 +68,11 @@ filteredData.sort((a, b) => {
       },
     },
   };
-    
 
   function rgbToRgba(rgb, alpha) {
     return rgb.replace(')', `, ${alpha})`).replace('rgb', 'rgba');
   }
-  
+
   // Get the background color based on the codnua
   function getBackgroundColor(codnua) {
     const lbl = Object.keys(GroupedNuances).find(key => GroupedNuances[key].includes(codnua));
@@ -67,7 +86,7 @@ filteredData.sort((a, b) => {
   }
 
   return (
-    <div style={{height:"450px"}}>
+    <div style={{ height: `${height}px`, width: '100%' }}>
       <Pie data={chartData} options={chartOptions} />
     </div>
   );

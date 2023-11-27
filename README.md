@@ -1,4 +1,22 @@
-# Getting Started with Create React App
+# Votaction
+Changez le monde, bureau de vote par bureau de vote
+
+## Présentation du prjet
+
+L'application qui vous donne une vue détaillée des résultats électoraux bureau de vote par bureau de vote
+Notre application utilise les données officielles des élections, disponibles sur [data.gouv.fr](www.data.gouv.fr), pour vous permettre de suivre en temps réel l'évolution des résultats et vous fournir une analyse détaillée de chaque bureau de vote.
+
+Vous pouvez visualiser les résultats pour chaque candidat, les taux de participation, et bien plus encore grâce à notre interface simple et intuitive.
+
+Que vous soyez un électeur curieux ou un analyste politique, VotAction est l'application qu'il vous faut pour suivre de près les élections et mieux comprendre les tendances de vote dans votre région.
+
+Essayez VotAction dès maintenant et découvrez les résultats électoraux de votre région sous un nouvel angle !
+
+## Information sur les données.
+
+Vous pouvez utiliser le fichier db.sql pour importer tous les résultats éléctoraux, bureau de vote par bureau de vote, depuis les élections européennes de 1999 (Hors Municipales).
+
+## Infromation
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

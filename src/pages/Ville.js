@@ -33,6 +33,7 @@ function Ville() {
   const [tables, setTables] = useState([]);
   const [data_filtered, setData_filtered] = useState([]);
   const [isCollapsed, setIsCollapsed] = useState(true);
+  const [isCollapsed2, setIsCollapsed2] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
   const [total1, setTotal1] = useState(0);
@@ -63,6 +64,9 @@ function Ville() {
     setIsCollapsed(!isCollapsed);
   };
 
+  const handleCollapse2Toggle = () => {
+    setIsCollapsed2(!isCollapsed2);
+  };
 
   const handleCode_communeChange = (event) => {
     setCode_commune(event.target.value);
@@ -81,16 +85,6 @@ function Ville() {
       setCode_bvote(code_bvote);
       navigate('/BVote');
     };
-
-
-  // useEffect(() => {
-  //   const fetchTables = async () => {
-  //       const result = await axios(`http://localhost:3005/api/tables`);
-  //       setTables(result.data);
-  //   };
-  //   fetchTables();
-  //   }, []);
-
   
   useEffect(() => {
     const fetchDepts = async () => {
@@ -113,8 +107,6 @@ function Ville() {
     fetchData();
   }, [elec, code_commune]);
 
-  
-
   useEffect(() => {
     const fetchVilles = async () => {
       const result = await axios(`http://localhost:3005/api/villes?elections=${elec}&dept=${code_departement}`);
@@ -122,7 +114,6 @@ function Ville() {
     };
     fetchVilles();
   }, [elec, code_departement]);
-
 
   useEffect(() => {
     console.log('data', data);
@@ -212,46 +203,48 @@ function Ville() {
         </div>
       </div>
       <div className='row'>
-      <div className='col-4'>
-      <Form>
-          <Form.Group controlId='formTables'>
-            <Form.Label>Election</Form.Label>
-            <Form.Select value={elec} onChange={handleElecChange}>
-              {Object.entries(list_elections).map(([key, value]) => (
-                <option key={key} value={key}>{value}</option>
-              ))}
-            </Form.Select>
-          </Form.Group>
-        </Form>
-        </div>
         <div className='col-4'>
         <Form>
-            <Form.Group controlId='formCity'>
-              <Form.Label>Departement</Form.Label>
-              <Form.Select value={code_departement} onChange={handleCode_departementChange}>
-                {depts.map((dept, index) => (
-                  <option key={index} value={dept.code_departement}>{dept.code_departement} - {dept.libelle_departement}</option>
-                  ))}
+            <Form.Group controlId='formTables'>
+              <Form.Label>Election</Form.Label>
+              <Form.Select value={elec} onChange={handleElecChange}>
+                {Object.entries(list_elections).map(([key, value]) => (
+                  <option key={key} value={key}>{value}</option>
+                ))}
               </Form.Select>
             </Form.Group>
           </Form>
           </div>
           <div className='col-4'>
           <Form>
-            <Form.Group controlId='formCity'>
-              <Form.Label>Ville</Form.Label>
-              <Form.Select value={code_commune} onChange={handleVilleChange}>
-                {villes.map((ville, index) => (
-                  <option key={index} value={ville.code_commune}>{ville.libelle_commune}</option>
-                ))}
-              </Form.Select>
-            </Form.Group>
-          </Form>
-        </div>
-        <div className='col-12 mt-5 bg-light p-5'>
-        <div className='jumbotron'>
-          <h2>Les graphes</h2>
-          <hr className='my-4'/>
+              <Form.Group controlId='formCity'>
+                <Form.Label>Departement</Form.Label>
+                <Form.Select value={code_departement} onChange={handleCode_departementChange}>
+                  {depts.map((dept, index) => (
+                    <option key={index} value={dept.code_departement}>{dept.code_departement} - {dept.libelle_departement}</option>
+                    ))}
+                </Form.Select>
+              </Form.Group>
+            </Form>
+            </div>
+            <div className='col-4'>
+            <Form>
+              <Form.Group controlId='formCity'>
+                <Form.Label>Ville</Form.Label>
+                <Form.Select value={code_commune} onChange={handleVilleChange}>
+                  {villes.map((ville, index) => (
+                    <option key={index} value={ville.code_commune}>{ville.libelle_commune}</option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+            </Form>
+          </div>
+        </div>        
+        <div className='row'>
+          <div className='col-12 mt-5 bg-light p-5 shadow'>
+            <div className='jumbotron'>
+              <h2>Les graphes</h2>
+              <hr className='my-4'/>
               <button
                 className='btn btn-secondary'
                 type='button'
@@ -261,39 +254,46 @@ function Ville() {
               >
                 Afficher les graphes
               </button>
-        </div>
+            </div>
             <Collapse in={!isCollapsed}>
-            <div className='row mt-4'>
-            {data_filtered.some(item => item.num_tour == 1) && (
-            <div className='col-4'>
-              <h3>Tour 1</h3>
-              <PieVille data={data_filtered} num_tour={1} />
+              <div className='row mt-4'>
+                <div className='col-4 mt-5 bg-light p-5'>
+                  <PieVille data={data_filtered} height={450}/>
+                </div>
+                <div className='col-8'>
+                  <div className='row'>
+                    <div className='col-12'>
+                      <h3>Evolution Nuances</h3>
+                      <NuaCheckboxes code_departement={code_departement} code_commune={code_commune} code_bvote={-1} desired_height={450} />
+                    </div>
+                    <div className='col-12'>
+                      <h3>Historique</h3>
+                      <ChartNuances code_departement={code_departement} code_commune={code_commune} code_bvote={-1} desired_height={450} />
+                    </div>
+                  </div>
+                </div>
               </div>
-            )}
-            {data_filtered.some(item => item.num_tour == 2) && (
-            <div className='col-4'>
-            <h3>Tour 2</h3>
-            <PieVille data={data_filtered} num_tour={2} />
-            </div>
-            )}
-            <div className='col-4'>
-              <h3>Evolution</h3>
-              <NuaCheckboxes code_departement={code_departement} code_commune={code_commune} code_bvote={-1} desired_height={450} />
-              </div>
-              <div className='col-12'>
-              <h3>Evolution</h3>
-              <ChartNuances code_departement={code_departement} code_commune={code_commune} code_bvote={-1} desired_height={450} />
-              </div>
-            </div>
             </Collapse>
+        </div>
       </div>
-
+          
       <div className='row'>
-        <div className='col-12 mt-5 bg-light jumbotron p-5'>
+        <div className='col-12 mt-5 bg-light p-5 shadow'>
           <h2>Les bureaux de vote</h2>
           <hr className='my-4'/>
-          <ListBDV elections={elec} code_departement={code_departement} code_commune={code_commune} handleBVoteClick={handleBVoteClick} />
-        </div>
+          <button
+            className='btn btn-secondary mb-4'
+            type='button'
+            onClick={handleCollapse2Toggle}
+            aria-expanded={!isCollapsed2}
+            aria-controls='evolution-section'
+          >
+            Afficher les bdv
+          </button>      
+            <Collapse in={!isCollapsed2}>
+              <ListBDV elections={elec} code_departement={code_departement} code_commune={code_commune} handleBVoteClick={handleBVoteClick} />
+            </Collapse>
+          </div>
       </div>
 
       <div className='row'>
@@ -308,14 +308,14 @@ function Ville() {
               {displayProgress ? (
                 <>
                 <div className='row'>
-                  <div className='col-6'>
-                  {data_filtered.some(item => item.num_tour == 1) && (
-                  <VilleProgress data={data_filtered} numTour={1} inscrits={inscrits1} votants={votants1} total={total1}/>
-                )}
-                </div>
-                <div className='col-6'>
+                <div className='col-12'>
                 {data_filtered.some(item => item.num_tour == 2) && (
                   <VilleProgress data={data_filtered} numTour={2} inscrits={inscrits2} votants={votants2} total={total2}/>
+                )}
+                </div>
+                <div className='col-12'>
+                  {data_filtered.some(item => item.num_tour == 1) && (
+                  <VilleProgress data={data_filtered} numTour={1} inscrits={inscrits1} votants={votants1} total={total1}/>
                 )}
                 </div>
                 </div>
@@ -339,7 +339,6 @@ function Ville() {
             </div>
         </div>
       </div>
-    </div>
   );
 }
 

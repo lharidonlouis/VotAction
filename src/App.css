@@ -29,6 +29,22 @@
   font-style: normal italic;
 }
 
+@media only screen and (min-width : 481px) {
+  .flex-row {
+      display: flex;
+      flex-wrap: wrap;
+  }
+  .flex-row > [class*='col-'] {
+      display: flex;
+      flex-direction: column;
+  }
+  .flex-row.row:after, 
+  .flex-row.row:before {
+      display: flex;
+  }
+}
+
+
 .bg-pastel-primary {
   background-color: #c3d9e6; /* Pastel Blue */
 }
