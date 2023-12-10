@@ -18,7 +18,7 @@ const TourProgress = ({ data, numTour }) => {
   };
 
   return (
-    <div className='bg-light p-5 my-5 rounded'>
+    <div className='bg-light p-5 my-5 rounded shadow'>
       <h2 className='text-center'>Tour {numTour}</h2>
       {/* <div className='row'>
         <div className='col-6'>

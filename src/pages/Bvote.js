@@ -214,7 +214,7 @@ function BVote() {
       </React.Suspense>
 
       <div className='row'>
-        <div className='col-12 mt-5 bg-light p-5'>
+        <div className='col-12 mt-5 bg-light p-5 shadow'>
           <div className='jumbotron'>
             <h2>Les graphes</h2>
             <hr className='my-4' />

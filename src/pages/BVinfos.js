@@ -133,7 +133,7 @@ const BVinfos = React.memo(({ code_departement, code_commune, code_bvote, data }
 
 
     return (
-        <div className='row mt-5' style={{display:"flex"}}>
+        <div className='row mt-5 shadow' style={{display:"flex"}}>
           {isLoading ? (
             <div className='col-12'>
               <div className="alert alert-primary" role="alert">
